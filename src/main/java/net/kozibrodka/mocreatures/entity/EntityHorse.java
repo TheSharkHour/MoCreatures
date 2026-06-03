@@ -4,6 +4,7 @@ package net.kozibrodka.mocreatures.entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.FabricLoader;
+import net.kozibrodka.mocreatures.events.AchievementListener;
 import net.kozibrodka.mocreatures.events.mod_mocreatures;
 import net.kozibrodka.mocreatures.mocreatures.*;
 import net.kozibrodka.mocreatures.network.*;
@@ -743,7 +744,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
                     setNameWithGui(this, (PlayerEntity)passenger);
                     if(getType() == 8)
                     {
-                        milosc.incrementStat(mod_mocreatures.WilfFlyingWest);
+                        milosc.incrementStat(AchievementListener.WilfFlyingWest);
                     }
                 }
             }
@@ -1068,7 +1069,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             setNameWithGui(this, entityplayer);
             if(getType() == 8)
             {
-                entityplayer.incrementStat(mod_mocreatures.WilfFlyingWest);
+                entityplayer.incrementStat(AchievementListener.WilfFlyingWest);
             }
             return true;
         }

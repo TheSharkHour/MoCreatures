@@ -1,10 +1,9 @@
-
-
 package net.kozibrodka.mocreatures.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.FabricLoader;
 import net.kozibrodka.mocreatures.entity.*;
+import net.kozibrodka.mocreatures.events.AchievementListener;
 import net.kozibrodka.mocreatures.events.mod_mocreatures;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -105,7 +104,7 @@ public class ItemWhip extends TemplateItem
 
             if(i1 > 6)
             {
-                entityplayer.incrementStat(mod_mocreatures.Indiana);
+                entityplayer.incrementStat(AchievementListener.Indiana);
             }
             return true;
         }
@@ -156,7 +155,7 @@ public class ItemWhip extends TemplateItem
                     world.blockUpdate(i, tempY, k, Block.SIGN.id);
                     if(i2 > 69)
                     {
-                        entityplayer.incrementStat(mod_mocreatures.BunnyKilla);
+                        entityplayer.incrementStat(AchievementListener.BunnyKilla);
                     }
                     whipFX(world, i, j, k);
                     world.playSound(entityplayer, "mocreatures:whip", 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));

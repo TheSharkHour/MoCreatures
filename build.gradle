@@ -126,7 +126,7 @@ dependencies {
 	modImplementation("net.danygames2014:WhatsThis:${project.whatsthis_version}") {
 		transitive false
 	}
-	modImplementation(files("libs/fabric-betterthanwolves-2.0.1.jar"))
+	modImplementation(files("libs/fabric-betterthanwolves-2.0.4.jar"))
 	modImplementation(files("libs/mpentityfix_fabric1~client.jar"))
 	modImplementation(files("libs/InventoryTweaks-2.6.1.jar"))
 	modImplementation(files("libs/retroauth-1.1.1.jar"))
