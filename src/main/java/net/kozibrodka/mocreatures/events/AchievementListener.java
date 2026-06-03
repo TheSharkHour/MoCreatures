@@ -1,17 +1,21 @@
 package net.kozibrodka.mocreatures.events;
 
+import net.kozibrodka.mocreatures.mixin.AchievementPageAccessor;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.client.gui.screen.achievement.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.template.achievement.TemplateAchievement;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class AchievementListener {
@@ -37,6 +41,19 @@ public class AchievementListener {
         RobertMaklowicz.challenge();
 
         event.achievements.addAll(ACHIEVEMENTS);
+
+        // Weird achievement page getter.
+        AchievementPage vanillaPage = null;
+        List<AchievementPage> list = AchievementPageAccessor.getPAGES();
+        for (AchievementPage achievementPage : list) {
+            if (Objects.equals(achievementPage.name(), "stationapi.minecraft")) {
+                vanillaPage = achievementPage;
+            }
+        }
+
+        if(vanillaPage != null) {
+            vanillaPage.addAchievements(ACHIEVEMENTS.toArray(Achievement[]::new));
+        }
     }
 
     public static Achievement create(String name, Item icon, int x, int y, Achievement parent) {
