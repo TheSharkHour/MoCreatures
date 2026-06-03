@@ -182,7 +182,7 @@ publishing {
 	}
 }
 
-// Modrinth Publishing
+// Modrinth Publishing Minotauro
 modrinth {
 	if (project.hasProperty("modrinth_publishing_cave")) {
 		token = project.modrinth_publishing_cave

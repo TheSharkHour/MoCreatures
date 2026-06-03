@@ -23,6 +23,7 @@ public class CREEPSFxSpit extends Particle
         scale *= 0.3F;
     }
 
+    @Override
     public int getGroup()
     {
         return 2;

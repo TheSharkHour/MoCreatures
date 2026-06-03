@@ -26,6 +26,7 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
@@ -37,7 +38,7 @@ import net.modificationstation.stationapi.api.util.TriState;
 import java.util.List;
 import java.util.Objects;
 
-@HasTrackingParameters(trackingDistance = 160, updatePeriod = 1, sendVelocity = TriState.TRUE)
+@HasTrackingParameters(trackingDistance = 160, updatePeriod = 2, sendVelocity = TriState.TRUE)
 public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnDataProvider, MoCreatureNamed
 {
 
@@ -47,8 +48,8 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
         setBoundingBoxSpacing(1.4F, 1.6F);
         health = 20;
         isjumping = false;
-        HorseSpeed = 0.80000000000000004D;
-        HorseJump = 0.40000000000000002D;
+        HorseSpeed = 0.8D;
+        HorseJump = 0.4D;
         temper = 100;
         askedServer = false;
         fwingb = 0.0F;
@@ -150,7 +151,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
     {
             if(typeint == 1)
             {
-                HorseSpeed = 0.90000000000000002D;
+                HorseSpeed = 0.9D;
                 temper = 100;
                 HorseJump = 0.4D;
                 texture = "/assets/mocreatures/stationapi/textures/mob/horseb.png";
@@ -168,9 +169,9 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             } else
             if(typeint == 3)
             {
-                HorseSpeed = 1.1000000000000001D;
+                HorseSpeed = 1.1D;
                 temper = 300;
-                HorseJump = 0.59999999999999998D;
+                HorseJump = 0.6D;
                 texture = "/assets/mocreatures/stationapi/textures/mob/horseblackb.png";
                 maxhealth = 35;
                 fireImmune = false;
@@ -178,7 +179,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             if(typeint == 4)
             {
                 HorseSpeed = 1.3D;
-                HorseJump = 0.59999999999999998D;
+                HorseJump = 0.6D;
                 temper = 400;
                 texture = "/assets/mocreatures/stationapi/textures/mob/horsegoldb.png";
                 maxhealth = 40;
@@ -194,7 +195,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             } else
             if(typeint == 6)
             {
-                HorseSpeed = 0.90000000000000002D;
+                HorseSpeed = 0.9D;
                 temper = 600;
                 texture = "/assets/mocreatures/stationapi/textures/mob/horsepackb.png";
                 maxhealth = 40;
@@ -204,7 +205,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             {
                 HorseSpeed = 1.3D;
                 temper = 700;
-                HorseJump = 0.59999999999999998D;
+                HorseJump = 0.6D;
                 texture = "/assets/mocreatures/stationapi/textures/mob/horsenightb.png";
                 maxhealth = 50;
                 fireImmune = true;
@@ -222,6 +223,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
     @Override
     public void onCollision(Entity otherEntity) {
         if(passenger instanceof PlayerEntity && passenger.passenger == otherEntity && !mod_mocreatures.mocGlass.animals.horse_speed_glitch){
+            return;
         }else {
             super.onCollision(otherEntity);
         }
@@ -316,7 +318,8 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             }
             fwingb += fwingh * 2.0F;
         }
-        super.tickMovement();
+//        super.tickMovement();
+        this.tickBaseMovement();
         if(world.isRemote){ /// Granica dla clienta
             if(getJokey()){ // && passenger == null
                 onGround = false; /// Koń macha skrzydłami z perspektywy drugiego gracza (będąc na ziemi - ala rozszerzyłem błąd aby było synchro między graczami)
@@ -538,9 +541,93 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
         return super.damage(entity, i);
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void setPositionAndAnglesAvoidEntities(double x, double y, double z, float pitch, float yaw, int interpolationSteps) {
+        this.standingEyeHeight = 0.0F;
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYaw = pitch;
+        this.lerpPitch = yaw;
+        this.bodyTrackingIncrements = interpolationSteps + 3;
+    }
+
+    public void tickBaseMovement() {
+        if (this.bodyTrackingIncrements > 0) {
+            double var1 = this.x + (this.lerpX - this.x) / ((double)this.bodyTrackingIncrements - 0.5D);
+            double var3 = this.y + (this.lerpY - this.y) / ((double)this.bodyTrackingIncrements - 2.5D);
+            double var5 = this.z + (this.lerpZ - this.z) / ((double)this.bodyTrackingIncrements - 0.5D);
+
+            double var7;
+            for(var7 = this.lerpYaw - (double)this.yaw; var7 < (double)-180.0F; var7 += (double)360.0F) {
+            }
+
+            while(var7 >= (double)180.0F) {
+                var7 -= (double)360.0F;
+            }
+
+            this.yaw = (float)((double)this.yaw + var7 / (double)this.bodyTrackingIncrements);
+            this.pitch = (float)((double)this.pitch + (this.lerpPitch - (double)this.pitch) / (double)this.bodyTrackingIncrements);
+            --this.bodyTrackingIncrements;
+            this.setPosition(var1, var3, var5);
+            this.setRotation(this.yaw, this.pitch);
+            List var9 = this.world.getEntityCollisions(this, this.boundingBox.contract((double)0.03125F, (double)0.0F, (double)0.03125F));
+            if (var9.size() > 0) {
+                double var10 = (double)0.0F;
+
+                for(int var12 = 0; var12 < var9.size(); ++var12) {
+                    Box var13 = (Box)var9.get(var12);
+                    if (var13.maxY > var10) {
+                        var10 = var13.maxY;
+                    }
+                }
+
+                var3 += var10 - this.boundingBox.minY;
+                this.setPosition(var1, var3, var5);
+            }
+        }
+
+        if (this.isImmobile()) {
+            this.jumping = false;
+            this.sidewaysSpeed = 0.0F;
+            this.forwardSpeed = 0.0F;
+            this.rotationSpeed = 0.0F;
+        } else if (!this.interpolateOnly) {
+            this.tickLiving();
+        }
+
+        boolean var14 = this.isSubmergedInWater();
+        boolean var2 = this.isTouchingLava();
+        if (this.jumping) {
+            if (var14) {
+                this.velocityY += (double)0.04F;
+            } else if (var2) {
+                this.velocityY += (double)0.04F;
+            } else if (this.onGround) {
+                this.jump();
+            }
+        }
+
+        this.sidewaysSpeed *= 0.98F;
+        this.forwardSpeed *= 0.98F;
+        this.rotationSpeed *= 0.9F;
+        this.travel(this.sidewaysSpeed, this.forwardSpeed);
+        List var16 = this.world.getEntities(this, this.boundingBox.expand((double)0.2F, (double)0.0F, (double)0.2F));
+        if (var16 != null && var16.size() > 0) {
+            for(int var4 = 0; var4 < var16.size(); ++var4) {
+                Entity var17 = (Entity)var16.get(var4);
+                if (var17.isPushable()) {
+                    var17.onCollision(this);
+                }
+            }
+        }
+
+    }
+
     public void travelClient(float f, float f1){
         if(Objects.equals(MocTick.mc.player.name, ((PlayerEntity) passenger).name)){
-            PacketHelper.send(new RidingHorsePacket(passenger.yaw, passenger.pitch, ((PlayerEntity) passenger).jumping));
+            PacketHelper.send(new RidingHorsePacket(passenger.yaw, passenger.pitch, ((PlayerEntity) passenger).jumping)); /// Packet for bow accuracy while riding
         }
 
         if(checkWaterCollisions())
@@ -1109,7 +1196,7 @@ public class EntityHorse extends AnimalEntity implements Inventory, MobSpawnData
             if(itemstack.itemId == Item.MUSHROOM_STEW.id)
             {
                 itemstack.count--;
-                entityplayer.inventory.addStack(new ItemStack(Item.BOWL));
+                entityplayer.inventory.setStack(entityplayer.inventory.selectedSlot, new ItemStack(Item.BOWL));
             } else
             if(--itemstack.count == 0)
             {

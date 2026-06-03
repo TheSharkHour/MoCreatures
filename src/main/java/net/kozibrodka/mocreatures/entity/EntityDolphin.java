@@ -30,7 +30,7 @@ import net.modificationstation.stationapi.api.util.TriState;
 
 import java.util.List;
 
-@HasTrackingParameters(trackingDistance = 160, updatePeriod = 1, sendVelocity = TriState.TRUE)
+@HasTrackingParameters(trackingDistance = 160, updatePeriod = 2, sendVelocity = TriState.TRUE)
 public class EntityDolphin extends EntityCustomWM implements MobSpawnDataProvider, MoCreatureNamed
         ///extends EntityCustomWM or EntityCustomAquaM
 {

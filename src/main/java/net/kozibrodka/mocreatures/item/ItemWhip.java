@@ -82,7 +82,7 @@ public class ItemWhip extends TemplateItem
                         entityhorse.sitting = !entityhorse.sitting;
                     }
                 }
-                /// ŻÓŁW wyłączony na razie - żeby śmiesznie chodził
+                /// Turtle - switched off currently to make it "clumsy"
 //                if(entity instanceof EntityTurtle)
 //                {
 //                    EntityTurtle entityturtle = (EntityTurtle)entity;
@@ -129,7 +129,7 @@ public class ItemWhip extends TemplateItem
                             entitybunny.markDead();
                         }
                     }
-                    ///  DEBUG
+                    ///  DEBUG for Dev
 //                    for(int j2 = 0; j2 < list1.size(); j2++)
 //                    {
 //                        if(list1.get(j2) instanceof EntitySheep entityitem)
@@ -150,7 +150,7 @@ public class ItemWhip extends TemplateItem
                     String s = String.valueOf(i2);
                     tileentitysign.texts[0] = "";
                     tileentitysign.texts[1] = "R.I.P.";
-                    tileentitysign.texts[2] = (new StringBuilder()).append(s).append(" Bunnies").toString();
+                    tileentitysign.texts[2] = s + " Bunnies";
                     tileentitysign.texts[3] = "";
                     world.blockUpdate(i, tempY, k, Block.SIGN.id);
                     if(i2 > 69)

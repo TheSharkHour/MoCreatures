@@ -12,8 +12,7 @@
     "homepage": "https://modrinth.com/mod/mo-creatures-stationapi",
     "sources": "https://github.com/kozibrodka/MoCreatures"
   },
-
-  "license": "CC0-1.0",
+  "license": "CC0-4.0",
   "icon": "assets/mocreatures/stationapi/icon.png",
   "environment": "*",
   "accessWidener": "mocreatures.accesswidener",

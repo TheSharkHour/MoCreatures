@@ -19,6 +19,8 @@ import java.util.List;
 
 public class RecipeManagerMixin {
 
+    /// This mixin changes recipe of aether, so that vanilla saddle is still only dungeon-obtainable
+
     @Shadow
     private List recipes;
 

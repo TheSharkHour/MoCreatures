@@ -1,2 +1,5 @@
-- Fix Dolphin texture
-- Fix Saddle recipe conflict with Aether mod
+- Updated to StationAPI Alpha-6.2
+- Improved server riding of Horses and Dolphins
+- Lowered sound volume of Deer grunts
+- Fixed Mushroom stew horse interraction
+- Fixed Green Apple compability

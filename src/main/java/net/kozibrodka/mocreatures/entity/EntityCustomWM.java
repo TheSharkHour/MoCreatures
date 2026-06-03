@@ -57,6 +57,18 @@ public class EntityCustomWM extends WaterCreatureEntity
 
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void setPositionAndAnglesAvoidEntities(double x, double y, double z, float pitch, float yaw, int interpolationSteps) {
+        this.standingEyeHeight = 0.0F;
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYaw = pitch;
+        this.lerpPitch = yaw;
+        this.bodyTrackingIncrements = interpolationSteps + 2; /// chyba +2 optimum (można spróbować 3)
+    }
+
     public void travelClient(float f, float f1) {
         if (Objects.equals(MocTick.mc.player.name, ((PlayerEntity) passenger).name)) {
             PacketHelper.send(new RidingHorsePacket(passenger.yaw, passenger.pitch, ((PlayerEntity) passenger).jumping));

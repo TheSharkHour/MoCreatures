@@ -29,7 +29,8 @@ import net.modificationstation.stationapi.api.util.Null;
 import java.util.List;
 
 public class mod_mocreatures {
-   // TODO SOUND VOLUME deer etc. Audacity broke sounds, idk how to do it correctly.
+   /// SOUND VOLUMEs lowered: deer
+
     @ConfigRoot(value = "MocreaturesCFG", visibleName = "Mo' Creatures Config")
     public static final MocreaturesCFG mocGlass = new MocreaturesCFG();
 
@@ -111,7 +112,7 @@ public class mod_mocreatures {
         woolball = new TemplateItem(Identifier.of(MOD_ID, "woolball")).setTranslationKey(MOD_ID, "woolball");
         rope = new TemplateItem(Identifier.of(MOD_ID, "rope")).setTranslationKey(MOD_ID, "rope");
         petfood = new TemplateItem(Identifier.of(MOD_ID, "petfood")).setTranslationKey(MOD_ID, "petfood");
-        greenapple = new GreenApple(Identifier.of(MOD_ID, "greenapple")).setTranslationKey(MOD_ID, "greenapple");
+        greenapple = new GreenApple(Identifier.of(MOD_ID, "greenapple"), 42, false).setTranslationKey(MOD_ID, "greenapple");
         elephanttusk = new TemplateItem(Identifier.of(MOD_ID, "elephanttusk")).setTranslationKey(MOD_ID, "elephanttusk").setMaxCount(8);
         megalodonteeth = new TemplateItem(Identifier.of(MOD_ID, "megalodonteeth")).setTranslationKey(MOD_ID, "megalodonteeth").setMaxCount(16);
         polarleather = new TemplateItem(Identifier.of(MOD_ID, "polarleather")).setTranslationKey(MOD_ID, "polarleather");
