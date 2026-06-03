@@ -4,6 +4,7 @@ package net.kozibrodka.mocreatures.entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.FabricLoader;
+import net.kozibrodka.mocreatures.events.AchievementListener;
 import net.kozibrodka.mocreatures.events.mod_mocreatures;
 import net.kozibrodka.mocreatures.mocreatures.MoCTools;
 import net.kozibrodka.mocreatures.mocreatures.MoCreatureNamed;
@@ -74,7 +75,7 @@ public class EntityDolphin extends EntityCustomWM implements MobSpawnDataProvide
     @Override
     public void giveAchievement(PlayerEntity player){
         if(getType() == 6){
-            player.incrementStat(mod_mocreatures.RobertMaklowicz);
+            player.incrementStat(AchievementListener.RobertMaklowicz);
         }
     }
 

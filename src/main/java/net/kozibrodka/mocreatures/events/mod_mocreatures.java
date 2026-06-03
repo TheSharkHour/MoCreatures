@@ -1,24 +1,18 @@
 package net.kozibrodka.mocreatures.events;
 
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.mods.gcapi3.api.ConfigRoot;
 import net.kozibrodka.mocreatures.glasscfg.MocreaturesCFG;
 import net.kozibrodka.mocreatures.item.*;
-import net.kozibrodka.mocreatures.mixin.AchievementPageAccessor;
 import net.kozibrodka.mocreatures.network.*;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
-import net.minecraft.achievement.Achievements;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.client.gui.screen.achievement.AchievementPage;
-import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
@@ -31,11 +25,8 @@ import net.modificationstation.stationapi.api.template.item.TemplateItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
-import net.minecraft.achievement.Achievement;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class mod_mocreatures {
    // TODO SOUND VOLUME deer etc. Audacity broke sounds, idk how to do it correctly.
@@ -104,47 +95,8 @@ public class mod_mocreatures {
 
     }
 
-    public static Achievement Indiana;
-    public static Achievement BunnyKilla;
-    public static Achievement WilfFlyingWest;
-    public static Achievement RobertMaklowicz;
-
-
-    @EventListener (priority = ListenerPriority.LOWEST)
-    public void registerAchievements(AchievementRegisterEvent event) {
-        Indiana = new Achievement(77, MOD_ID+(".indiana").toString(), -4, -4, mod_mocreatures.whip, Achievements.OPEN_INVENTORY).addStat();
-        BunnyKilla = new Achievement(78, MOD_ID+(".bunnykilla").toString(), -5, -5, mod_mocreatures.whip, Achievements.OPEN_INVENTORY).addStat();
-        WilfFlyingWest = new Achievement(79, MOD_ID+(".wildflyingwest").toString(), -6, -6, mod_mocreatures.horsesaddle, Achievements.OPEN_INVENTORY).addStat();
-        RobertMaklowicz = new Achievement(80, MOD_ID+(".robertmaklowicz").toString(), -7, -7, Block.FLOWING_WATER, Achievements.OPEN_INVENTORY).addStat();
-
-        WilfFlyingWest.challenge();
-        RobertMaklowicz.challenge();
-
-        final ArrayList<Achievement> MOCRACHIEVEMENTS = new ArrayList<>();
-
-        MOCRACHIEVEMENTS.add(BunnyKilla);
-        MOCRACHIEVEMENTS.add(Indiana);
-        MOCRACHIEVEMENTS.add(WilfFlyingWest);
-        MOCRACHIEVEMENTS.add(RobertMaklowicz);
-
-        AchievementPage vanillaPage = null;
-        List list = AchievementPageAccessor.getPAGES();
-        for(int j2 = 0; j2 < list.size(); j2++)
-        {
-            if(Objects.equals(((AchievementPage) list.get(j2)).name(), "stationapi.minecraft"))
-            {
-                vanillaPage = (AchievementPage)list.get(j2);
-            }
-        }
-
-        if(vanillaPage != null) {
-            vanillaPage.addAchievements(MOCRACHIEVEMENTS.toArray(Achievement[]::new));
-        }
-
-    }
-
     @EventListener
-    public void registerItems(ItemRegistryEvent event){
+    public void registerItems(ItemRegistryEvent event) {
         horsesaddle = new HorseSaddle(Identifier.of(MOD_ID, "horsesaddle")).setTranslationKey(MOD_ID, "horsesaddle");
         haystack = new HayStack(Identifier.of(MOD_ID, "haystack")).setTranslationKey(MOD_ID, "haystack");
         sugarlump = new SugarLump(Identifier.of(MOD_ID, "sugarlump")).setTranslationKey(MOD_ID, "sugarlump");
