@@ -25,8 +25,7 @@ public class EntityMummy extends MonsterEntity implements MobSpawnDataProvider
         movementSpeed = 0.4F;
         attackDamage = 3;
         health = random.nextInt(6) + 25;
-        texture = "/assets/mocreatures/stationapi/textures/mob/mummy.png"; //TODO TEST BATTLE TOWERS + scorpion
-        if(!world.isRemote){
+        if(world != null && !world.isRemote){  /// For MobSpawner correct render
             setTypeSpawn();
         }
     }
@@ -164,7 +163,7 @@ public class EntityMummy extends MonsterEntity implements MobSpawnDataProvider
     @Environment(EnvType.CLIENT)
     public String getTexture() {
         return switch (getType()) {
-            case 1 -> "/assets/mocreatures/stationapi/textures/mob/mummy.png";
+            case 1, 0 -> "/assets/mocreatures/stationapi/textures/mob/mummy.png";
             case 2 -> "/assets/mocreatures/stationapi/textures/mob/mummy1.png";
             case 3 -> "/assets/mocreatures/stationapi/textures/mob/mummy2.png";
             case 4 -> "/assets/mocreatures/stationapi/textures/mob/mummy3.png";

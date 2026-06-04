@@ -27,7 +27,8 @@ public class EntityScorpion extends MonsterEntity implements MobSpawnDataProvide
         movementSpeed = 0.8F;
         health = 15;
         poisontimer = 0;
-        if(!world.isRemote){
+        setAge(1.1F); /// For MobSpawner correct render
+        if(world != null && !world.isRemote){
             setTypeSpawn();
         }
     }
@@ -268,7 +269,7 @@ public class EntityScorpion extends MonsterEntity implements MobSpawnDataProvide
     public String getTexture() {
         return switch (getType()) {
             case 1 -> "/assets/mocreatures/stationapi/textures/mob/scorpiona.png";
-            case 2 -> "/assets/mocreatures/stationapi/textures/mob/scorpionb.png";
+            case 2, 0 -> "/assets/mocreatures/stationapi/textures/mob/scorpionb.png";
             case 3 -> "/assets/mocreatures/stationapi/textures/mob/scorpionc.png";
             case 4 -> "/assets/mocreatures/stationapi/textures/mob/scorpiond.png";
             default -> "";
