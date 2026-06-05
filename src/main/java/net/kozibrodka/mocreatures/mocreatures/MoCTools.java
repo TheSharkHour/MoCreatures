@@ -15,38 +15,46 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MoCTools {
 
-    public static void addHeartParticles(World world, LivingEntity entity){
-        for (int var3 = 0; var3 < 7; ++var3) {
-            double var4 = world.random.nextGaussian() * 0.02D;
-            double var6 = world.random.nextGaussian() * 0.02D;
-            double var8 = world.random.nextGaussian() * 0.02D;
-            world.addParticle("heart", entity.x + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width, entity.y + 0.5D + (double) (world.random.nextFloat() * entity.height), entity.z + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width, var4, var6, var8);
+    public static void addHeartParticles(World world, LivingEntity entity) {
+        for (int i = 0; i < 7; ++i) {
+            double pX = world.random.nextGaussian() * 0.02D;
+            double pY = world.random.nextGaussian() * 0.02D;
+            double pZ = world.random.nextGaussian() * 0.02D;
+            world.addParticle("heart",
+                    entity.x + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width,
+                    entity.y + 0.5D + (double) (world.random.nextFloat() * entity.height),
+                    entity.z + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width,
+                    pX, pY, pZ);
         }
     }
 
-    public static void addFlameParticles(World world, LivingEntity entity){
-        for (int var3 = 0; var3 < 7; ++var3) {
-            double var4 = world.random.nextGaussian() * 0.02D;
-            double var6 = world.random.nextGaussian() * 0.02D;
-            double var8 = world.random.nextGaussian() * 0.02D;
-            world.addParticle("flame", entity.x + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width, entity.y + 0.5D + (double) (world.random.nextFloat() * entity.height), entity.z + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width, var4, var6, var8);
+    public static void addFlameParticles(World world, LivingEntity entity) {
+        for (int i = 0; i < 7; ++i) {
+            double pX = world.random.nextGaussian() * 0.02D;
+            double pY = world.random.nextGaussian() * 0.02D;
+            double pZ = world.random.nextGaussian() * 0.02D;
+            world.addParticle("flame",
+                    entity.x + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width,
+                    entity.y + 0.5D + (double) (world.random.nextFloat() * entity.height),
+                    entity.z + (double) (world.random.nextFloat() * entity.width * 2.0F) - (double) entity.width,
+                    pX, pY, pZ);
         }
     }
 
-    public static void destroyDrops(Entity entity, double d) {
-        if(mod_mocreatures.mocGlass.huntercreatures.destroyitems) {
-            List list = entity.world.getEntities(entity, entity.boundingBox.expand(d, d, d));
-            for (Object o : list) {
-                Entity entity1 = (Entity) o;
-                if (entity1 instanceof ItemEntity entityitem) {
-                    if (entityitem.age < 50) {
-                        entityitem.markDead();
+    public static void destroyDrops(Entity entity, double radius) {
+        if (mod_mocreatures.mocGlass.huntercreatures.destroyitems) {
+            List<Entity> entities = entity.world.getEntities(entity, entity.boundingBox.expand(radius, radius, radius));
+            for (Entity ent : entities) {
+                if (ent instanceof ItemEntity item) {
+                    if (item.age < 50) {
+                        item.markDead();
                     }
                 }
             }
@@ -54,52 +62,53 @@ public class MoCTools {
     }
 
     public static void MoveCreatureToXYZ(MobEntity movingEntity, int x, int y, int z, float f) {
-        Path pathentity = movingEntity.world.findPath(movingEntity, x, y, z, f);
-        if(pathentity != null) {
-            movingEntity.setPath(pathentity);
-        }
-
+        Path path = movingEntity.world.findPath(movingEntity, x, y, z, f);
+        if (path != null)
+            movingEntity.setPath(path);
     }
 
     public static void MoveToWater(MobEntity entity) {
-        int[] ai = ReturnNearestMaterialCoord(entity, Material.WATER, Double.valueOf(20.0D), Double.valueOf(2.0D));
-        if(ai[1] != -1) {
+        int[] ai = ReturnNearestMaterialCoord(entity, Material.WATER, 20D, 2D);
+        if (ai[1] != -1) {
             MoveCreatureToXYZ(entity, ai[0], ai[1], ai[2], 24.0F);
         }
-
     }
 
-    public static int[] ReturnNearestMaterialCoord(Entity entity, Material material, Double double1, Double yOff) {
+    public static int[] ReturnNearestMaterialCoord(Entity entity, Material material, Double xzOff, Double yOff) {
         double shortestDistance = -1.0D;
         double distance = 0.0D;
-        int x = -1; /// ZMIANA LOGIKI było -9999 i sprawdzanie czy x > - 1000, z tym że wtedy na ogromnej czesci świata nie działa LOL
+        // ZMIANA LOGIKI było -9999 i sprawdzanie czy x > - 1000, z tym że wtedy na ogromnej czesci świata nie działa LOL
+        // CHANGED LOGIC - This was -9999 and checking if x was above -1000. This made it not work in a large chunk of the world. LOL
+        int x = -1;
         int y = -1;
         int z = -1;
-        Box axisalignedbb = entity.boundingBox.expand(double1.doubleValue(), yOff.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor(axisalignedbb.minX);
-        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor(axisalignedbb.minY);
-        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor(axisalignedbb.minZ);
-        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
 
-        for(int k1 = i; k1 < j; ++k1) {
-            for(int l1 = k; l1 < l; ++l1) {
-                for(int i2 = i1; i2 < j1; ++i2) {
-                    int j2 = entity.world.getBlockId(k1, l1, i2);
-                    if(j2 != 0 && Block.BLOCKS[j2].material == material) {
-                        distance = getSqDistanceTo(entity, k1, l1, i2);
-                        if(shortestDistance == -1.0D) {
-                            x = k1;
-                            y = l1;
-                            z = i2;
+        Box aabb = entity.boundingBox.expand(xzOff, yOff, xzOff);
+
+        int minX = MathHelper.floor(aabb.minX);
+        int maxX = MathHelper.floor(aabb.maxX + 1.0D);
+        int minY = MathHelper.floor(aabb.minY);
+        int maxY = MathHelper.floor(aabb.maxY + 1.0D);
+        int minZ = MathHelper.floor(aabb.minZ);
+        int maxZ = MathHelper.floor(aabb.maxZ + 1.0D);
+
+        for (int xx = minX; xx < maxX; ++xx) {
+            for (int yy = minY; yy < maxY; ++yy) {
+                for (int zz = minZ; zz < maxZ; ++zz) {
+                    int blockID = entity.world.getBlockId(xx, yy, zz);
+                    if (blockID != 0 && Block.BLOCKS[blockID].material == material) {
+                        distance = getSqDistanceTo(entity, xx, yy, zz);
+                        if (shortestDistance == -1.0D) {
+                            x = xx;
+                            y = yy;
+                            z = zz;
                             shortestDistance = distance;
                         }
 
-                        if(distance < shortestDistance) {
-                            x = k1;
-                            y = l1;
-                            z = i2;
+                        if (distance < shortestDistance) {
+                            x = xx;
+                            y = yy;
+                            z = zz;
                             shortestDistance = distance;
                         }
                     }
@@ -107,68 +116,61 @@ public class MoCTools {
             }
         }
 
-        if(entity.x > (double)x) {
-            x -= 2;
-        } else {
-            x += 2;
-        }
-
-        if(entity.z > (double)z) {
-            z -= 2;
-        } else {
-            z += 2;
-        }
+        x -= entity.x > (double) x ? 2 : -2;
+        z -= entity.z > (double) z ? 2 : -2;
 
         return new int[]{x, y, z};
     }
 
     public static int[] ReturnNearestBlockCoord(Entity entity, String tileName, Double double1, Double yOff) {
         double shortestDistance = -1.0D;
-        double distance = 0.0D;
+        double distance;
         int x = -1;
         int y = -1;
         int z = -1;
-        Box axisalignedbb = entity.boundingBox.expand(double1.doubleValue(), yOff.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor(axisalignedbb.minX);
-        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor(axisalignedbb.minY);
-        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor(axisalignedbb.minZ);
-        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
 
-        for(int k1 = i; k1 < j; ++k1) {
-            for(int l1 = k; l1 < l; ++l1) {
-                for(int i2 = i1; i2 < j1; ++i2) {
-                    int j2 = entity.world.getBlockId(k1, l1, i2);
-                    if(j2 != 0 && Objects.equals(Block.BLOCKS[j2].getTranslationKey(), tileName)) {
-                        distance = getSqDistanceTo(entity, k1, l1, i2);
-                        if(shortestDistance == -1.0D) {
-                            x = k1;
-                            y = l1;
-                            z = i2;
+        Box aabb = entity.boundingBox.expand(double1, yOff, double1);
+
+        int minX = MathHelper.floor(aabb.minX);
+        int maxX = MathHelper.floor(aabb.maxX + 1.0D);
+        int minY = MathHelper.floor(aabb.minY);
+        int maxY = MathHelper.floor(aabb.maxY + 1.0D);
+        int minZ = MathHelper.floor(aabb.minZ);
+        int maxZ = MathHelper.floor(aabb.maxZ + 1.0D);
+
+        for (int xx = minX; xx < maxX; ++xx) {
+            for (int yy = minY; yy < maxY; ++yy) {
+                for (int zz = minZ; zz < maxZ; ++zz) {
+                    int blockID = entity.world.getBlockId(xx, yy, zz);
+                    if (blockID != 0 && Objects.equals(Block.BLOCKS[blockID].getTranslationKey(), tileName)) {
+                        distance = getSqDistanceTo(entity, xx, yy, zz);
+                        if (shortestDistance == -1.0D) {
+                            x = xx;
+                            y = yy;
+                            z = zz;
                             shortestDistance = distance;
                         }
 
-                        if(distance < shortestDistance) {
-                            x = k1;
-                            y = l1;
-                            z = i2;
+                        if (distance < shortestDistance) {
+                            x = xx;
+                            y = yy;
+                            z = zz;
                             shortestDistance = distance;
                         }
                     }
                 }
             }
         }
-        return (new int[] {
+        return (new int[]{
                 x, y, z
         });
     }
 
-    public static double getSqDistanceTo(Entity entity, int i, int j, int k) {
-        double l = entity.x - (double)i;
-        double i1 = entity.y - (double)j;
-        double j1 = entity.z - (double)k;
-        return Math.sqrt(l * l + i1 * i1 + j1 * j1);
+    public static double getSqDistanceTo(Entity entity, int x, int y, int z) {
+        double xx = entity.x - (double) x;
+        double yy = entity.y - (double) y;
+        double zz = entity.z - (double) z;
+        return Math.sqrt(xx * xx + yy * yy + zz * zz);
     }
 
     public static float realAngle(float origAngle) {
@@ -176,15 +178,18 @@ public class MoCTools {
     }
 
     public static float distanceToSurface(Entity entity) {
-        int i = MathHelper.floor(entity.x);
-        int j = MathHelper.floor(entity.y);
-        int k = MathHelper.floor(entity.z);
-        int l = entity.world.getBlockId(i, j, k);
-        if(l != 0 && Block.BLOCKS[l].material == Material.WATER) {
-            for(int x = 1; x < 10; ++x) { /// Oryginalnie patrzy jedynie x < 5 (5 bloków wody w górę) co powoduje utknięcie na pewnej głębokości.
-                l = entity.world.getBlockId(i, j + x, k);
-                if(l == 0 || Block.BLOCKS[l].material != Material.WATER) {
-                    return (float)x;
+        int mX = MathHelper.floor(entity.x);
+        int mY = MathHelper.floor(entity.y);
+        int mZ = MathHelper.floor(entity.z);
+        int blockID = entity.world.getBlockId(mX, mY, mZ);
+
+        if (blockID != 0 && Block.BLOCKS[blockID].material == Material.WATER) {
+            // Oryginalnie patrzy jedynie x < 5 (5 bloków wody w górę) co powoduje utknięcie na pewnej głębokości.
+            // Originally this only checked 5 blocks up for water, meaning it got stuck at certain depths.
+            for (int x = 1; x < 10; ++x) {
+                blockID = entity.world.getBlockId(mX, mY + x, mZ);
+                if (blockID == 0 || Block.BLOCKS[blockID].material != Material.WATER) {
+                    return (float) x;
                 }
             }
         }
@@ -192,38 +197,36 @@ public class MoCTools {
         return 0.0F;
     }
 
-    public static boolean isSharkUnderIce(Entity entity) {
-        int i = MathHelper.floor(entity.x);
-        int j = MathHelper.floor(entity.y);
-        int k = MathHelper.floor(entity.z);
-        int l;
-            for(int x = 0; x < 11; ++x) {
-                l = entity.world.getBlockId(i, j + x, k);
-                if(Block.BLOCKS[l].material == Material.ICE) {
-                    return true;
-                }
+    public static boolean isSharkUnderIce(@NotNull Entity entity) {
+        int mX = MathHelper.floor(entity.x);
+        int mY = MathHelper.floor(entity.y);
+        int mZ = MathHelper.floor(entity.z);
+
+        for (int x = 0; x < 11; ++x) {
+            int blockID = entity.world.getBlockId(mX, mY + x, mZ);
+            if (Block.BLOCKS[blockID].material == Material.ICE) {
+                return true;
             }
+        }
+
         return false;
     }
 
-    public static boolean NearMaterialWithDistance(Entity entity, Double double1, Material mat)
-    {
-        Box axisalignedbb = entity.boundingBox.expand(double1.doubleValue(), double1.doubleValue(), double1.doubleValue());
-        int i = MathHelper.floor(axisalignedbb.minX);
-        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor(axisalignedbb.minY);
-        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor(axisalignedbb.minZ);
-        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
-        for(int k1 = i; k1 < j; k1++)
-        {
-            for(int l1 = k; l1 < l; l1++)
-            {
-                for(int i2 = i1; i2 < j1; i2++)
-                {
-                    int j2 = entity.world.getBlockId(k1, l1, i2);
-                    if(j2 != 0 && Block.BLOCKS[j2].material == mat)
-                    {
+    public static boolean NearMaterialWithDistance(Entity entity, Double radius, Material mat) {
+        Box aabb = entity.boundingBox.expand(radius, radius, radius);
+
+        int minX = MathHelper.floor(aabb.minX);
+        int maxX = MathHelper.floor(aabb.maxX + 1.0D);
+        int minY = MathHelper.floor(aabb.minY);
+        int maxY = MathHelper.floor(aabb.maxY + 1.0D);
+        int minZ = MathHelper.floor(aabb.minZ);
+        int maxZ = MathHelper.floor(aabb.maxZ + 1.0D);
+
+        for (int xx = minX; xx < maxX; xx++) {
+            for (int yy = minY; yy < maxY; yy++) {
+                for (int zz = minZ; zz < maxZ; zz++) {
+                    int blockID = entity.world.getBlockId(xx, yy, zz);
+                    if (blockID != 0 && Block.BLOCKS[blockID].material == mat) {
                         return true;
                     }
                 }
@@ -235,16 +238,17 @@ public class MoCTools {
         return false;
     }
 
-    public static boolean isNearWater(Entity entity) { /// Może 8 kratek za dużo???
-        return isNearBlockName(entity, Double.valueOf(12.0D), "tile.water"); // 8.0D
+    // Może 8 kratek za dużo???
+    // 12 squares might be too many??? (was 8)
+    public static boolean isNearWater(Entity entity) {
+        return isNearBlockName(entity, 12D, "tile.water"); // 8.0D
     }
 
     public static boolean isNearTorch(Entity entity) {
-        if(mod_mocreatures.mocGlass.huntercreatures.huntersSpawnOnTorch){
-            return false;
-        }else{
-            return isNearBlockName(entity, Double.valueOf(8.0D), "tile.torch");
-        }
+        if (mod_mocreatures.mocGlass.huntercreatures.huntersSpawnOnTorch) return false;
+
+        // return isNearBlockName(entity, 8.0D, "tile.torch");
+        return isNearTorch(entity, 8.0D);
     }
 
     public static boolean isNearTorch(Entity entity, Double dist) {
@@ -252,43 +256,47 @@ public class MoCTools {
     }
 
     public static boolean isNearBlockName(Entity entity, Double dist, String blockName) {
-        Box axisalignedbb = entity.boundingBox.expand(dist.doubleValue(), dist.doubleValue() / 2.0D, dist.doubleValue());
-        int i = MathHelper.floor(axisalignedbb.minX);
-        int j = MathHelper.floor(axisalignedbb.maxX + 1.0D);
-        int k = MathHelper.floor(axisalignedbb.minY);
-        int l = MathHelper.floor(axisalignedbb.maxY + 1.0D);
-        int i1 = MathHelper.floor(axisalignedbb.minZ);
-        int j1 = MathHelper.floor(axisalignedbb.maxZ + 1.0D);
+        Box aabb = entity.boundingBox.expand(dist, dist / 2.0D, dist);
 
-        for(int k1 = i; k1 < j; ++k1) {
-            for(int l1 = k; l1 < l; ++l1) {
-                for(int i2 = i1; i2 < j1; ++i2) {
-                    int j2 = entity.world.getBlockId(k1, l1, i2);
-                    if(j2 != 0) {
-                        String nameToCheck = "";
-                        nameToCheck = Block.BLOCKS[j2].getTranslationKey();
-                        if(nameToCheck != null && nameToCheck != "" && nameToCheck.equals(blockName)) {
-                            return true;
-                        }
-                    }
+        int minX = MathHelper.floor(aabb.minX);
+        int maxX = MathHelper.floor(aabb.maxX + 1.0D);
+        int minY = MathHelper.floor(aabb.minY);
+        int maxY = MathHelper.floor(aabb.maxY + 1.0D);
+        int minZ = MathHelper.floor(aabb.minZ);
+        int maxZ = MathHelper.floor(aabb.maxZ + 1.0D);
+
+        for (int xx = minX; xx < maxX; ++xx) {
+            for (int yy = minY; yy < maxY; ++yy) {
+                for (int zz = minZ; zz < maxZ; ++zz) {
+                    int blockID = entity.world.getBlockId(xx, yy, zz);
+                    if (blockID == 0) continue;
+
+                    String nameToCheck;
+                    nameToCheck = Block.BLOCKS[blockID].getTranslationKey();
+                    if (nameToCheck != null && !nameToCheck.isEmpty() && nameToCheck.equals(blockName))
+                        return true;
                 }
             }
         }
+
         return false;
     }
 
     public static void disorientEntity(Entity entity) {
         double rotD = 0.0D;
         double motD = 0.0D;
+
         double d = entity.world.random.nextGaussian();
         double d1 = 0.1D * d;
         motD = 0.2D * d1 + 0.8D * motD;
         entity.velocityX += motD;
         entity.velocityZ += motD;
+
         double d2 = 0.78D * d;
         rotD = 0.125D * d2 + 0.875D * rotD;
-        entity.yaw = (float)((double)entity.yaw + rotD);
-        entity.pitch = (float)((double)entity.pitch + rotD);
+
+        entity.yaw = (float) ((double) entity.yaw + rotD);
+        entity.pitch = (float) ((double) entity.pitch + rotD);
     }
 
     public static void slowEntity(Entity entity) {
@@ -296,57 +304,139 @@ public class MoCTools {
         entity.velocityZ *= 0.8D;
     }
 
-    public static ItemEntity getClosestItem(Entity entity, double d, int i, int j)
-    {
-        double d1 = -1D;
+    public static ItemEntity getClosestItem(Entity entity, double radius, int firstItem, int secondItem) {
+        double distance = -1D;
         ItemEntity entityitem = null;
-        List list = entity.world.getEntities(entity, entity.boundingBox.expand(d, d, d));
-        for(int k = 0; k < list.size(); k++)
-        {
-            Entity entity1 = (Entity)list.get(k);
-            if(!(entity1 instanceof ItemEntity))
-            {
+        List<Entity> entities = entity.world.getEntities(entity, entity.boundingBox.expand(radius, radius, radius));
+        for (Entity ent : entities) {
+            if (!(ent instanceof ItemEntity))
                 continue;
-            }
-            ItemEntity entityitem1 = (ItemEntity)entity1;
-            if(entityitem1.stack.itemId != i && j != 0 && entityitem1.stack.itemId != j)
-            {
+
+            ItemEntity item = (ItemEntity) ent;
+            if (item.stack.itemId != firstItem && secondItem != 0 && item.stack.itemId != secondItem)
                 continue;
-            }
-            double d2 = entityitem1.getSquaredDistance(entity.x, entity.y, entity.z);
-            if((d < 0.0D || d2 < d * d) && (d1 == -1D || d2 < d1))
-            {
-                d1 = d2;
-                entityitem = entityitem1;
+
+            double itemDist = item.getSquaredDistance(entity.x, entity.y, entity.z);
+            if ((radius < 0.0D || itemDist < radius * radius) && (distance == -1D || itemDist < distance)) {
+                distance = itemDist;
+                entityitem = item;
             }
         }
 
         return entityitem;
     }
 
+    /**
+     * Fixes entities stuck in a death animation while still alive.
+     * Called after a crocodile death roll attack.
+     */
     public static void checkForTwistedEntities(World world) {
-        /// SPRAWDZA wszystkie entitities na mapie... czy nie za duzo.
-        List list1 = world.entities;
-        for(int j2 = 0; j2 < list1.size(); j2++)
-        {
-            if(list1.get(j2) instanceof LivingEntity twistedEntity)
-            {
-                if(twistedEntity.deathTime > 0 && twistedEntity.vehicle == null && twistedEntity.health > 0) {
+        // SPRAWDZA wszystkie entitities na mapie... czy nie za duzo.
+        // Checks for ALL entities on the map... if there aren't too many. - This is wrong I think?
+        List<Entity> entities = world.entities;
+        for (Entity entity : entities) {
+            if (entity instanceof LivingEntity twistedEntity) {
+                if (twistedEntity.deathTime > 0 && twistedEntity.vehicle == null && twistedEntity.health > 0) {
                     twistedEntity.deathTime = 0;
                 }
             }
         }
-
     }
 
+    /**
+     * <p>A list of normal entities to ignore when targeting.</p>
+     *
+     * @param hunter The targeting entity.
+     * @param victim The  targeted entity.
+     * @return true if the targeted mob should be ignored.
+     * @deprecated - Use {@link #shouldIgnoreAsTarget(Entity, Entity)} instead.
+     */
+    @Deprecated(since = "1.0.4")
     public static boolean entitiesToIgnore(Entity hunter, Entity victim) {
-        return !(victim instanceof LivingEntity) || (victim instanceof MonsterEntity) && !(hunter instanceof EntityBigCat) && !(victim instanceof EntityWWolf) || victim == hunter || victim == hunter.passenger || victim == hunter.vehicle || (victim instanceof PlayerEntity) || (victim instanceof EntityKittyBed) || (victim instanceof EntityLitterBox) || (victim instanceof WolfEntity) && ((WolfEntity)victim).isTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackwolves || (victim instanceof EntityHorse) && ((EntityHorse)victim).getTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackhorses || (victim instanceof EntityDolphin) && ((EntityDolphin)victim).getTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackdolphins || (victim instanceof EntityCollie) && ((EntityCollie)victim).isTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackwolves;
+        return !(victim instanceof LivingEntity)
+                || (victim instanceof MonsterEntity) && !(hunter instanceof EntityBigCat) && !(victim instanceof EntityWWolf)
+                || victim == hunter
+                || victim == hunter.passenger
+                || victim == hunter.vehicle
+                || (victim instanceof PlayerEntity)
+                || (victim instanceof EntityKittyBed)
+                || (victim instanceof EntityLitterBox)
+                || (victim instanceof WolfEntity) && ((WolfEntity) victim).isTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackwolves
+                || (victim instanceof EntityHorse) && ((EntityHorse) victim).getTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackhorses
+                || (victim instanceof EntityDolphin) && ((EntityDolphin) victim).getTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackdolphins
+                || (victim instanceof EntityCollie) && ((EntityCollie) victim).isTamed() && !mod_mocreatures.mocGlass.huntercreatures.attackwolves;
     }
-    ///  opcje dla nie-atakowania bigcats tamed i cats na razie nie ma.
 
+    /**
+     * <p>A list of tamed mobs to ignore when targeting, this is controled by the config options.</p>
+     *
+     * @param hunter The targeting entity.
+     * @param victim The targeted entity.
+     * @return true if the targeted mob should be ignored.
+     * @deprecated - Use {@link #shouldIgnoreAsTarget} instead.
+     */
+    @Deprecated(since = "1.0.4")
+    // opcje dla nie-atakowania bigcats tamed i cats na razie nie ma.
+    // There are no options to ignore tamed BigCats or Kitties yet.
     public static boolean entitiesTamedIgnore(Entity hunter, Entity victim) {
-        return (hunter instanceof MoCreatureNamed && victim instanceof MoCreatureNamed && ((MoCreatureNamed) hunter).getTamed() && ((MoCreatureNamed) victim).getTamed());
+        return (hunter instanceof MoCreatureNamed
+                && victim instanceof MoCreatureNamed
+                && ((MoCreatureNamed) hunter).getTamed()
+                && ((MoCreatureNamed) victim).getTamed());
     }
 
+    /**
+     * A list of entities to ignore when targeting.
+     *
+     * @param hunter The targeting entity.
+     * @param target The targeted entity.
+     * @return true if the targeted entity should be ignored.
+     */
+    public static boolean shouldIgnoreAsTarget(Entity hunter, Entity target) {
+        // Don't target non-living entities.
+        if (!(target instanceof LivingEntity)) return true;
 
+        // What was the point of this call? Most neutral/hostile mobs can attack players anyway.
+        // if (victim instanceof PlayerEntity) return true;
+
+        // If the victim is a monster entity, and
+        // the hunter is a big cat: return false, they can attack monsters.
+        // the target is a wild wolf: return false, everyone can attack wolves.
+        // otherwise return true for all other monsters.
+        if (target instanceof MonsterEntity) {
+            if (hunter instanceof EntityBigCat) return false;
+            if (target instanceof EntityWWolf) return false;
+
+            return true;
+        }
+
+        // Don't target yourself (the hunter), or your passenger/vehicle.
+        if (target == hunter) return true;
+        if (target == hunter.passenger || target == hunter.vehicle) return true;
+
+        // Don't target 'furniture' entities.
+        if (target instanceof EntityKittyBed || target instanceof EntityLitterBox) return true;
+
+        // Don't target tamed entities. This is config dependent.
+        if (target instanceof EntityHorse
+                && ((EntityHorse) target).getTamed()
+                && !mod_mocreatures.mocGlass.huntercreatures.attackhorses) return true;
+
+        if (target instanceof EntityDolphin && ((EntityDolphin) target).getTamed()
+                && !mod_mocreatures.mocGlass.huntercreatures.attackdolphins) return true;
+
+        if (target instanceof WolfEntity
+                && ((WolfEntity) target).isTamed()
+                && !mod_mocreatures.mocGlass.huntercreatures.attackwolves) return true;
+
+        if (target instanceof EntityCollie
+                && ((EntityCollie) target).isTamed()
+                && !mod_mocreatures.mocGlass.huntercreatures.attackwolves) return true;
+
+        // Don't target another tamed creature if you're ALSO tamed.
+        return hunter instanceof MoCreatureNamed
+                && target instanceof MoCreatureNamed
+                && ((MoCreatureNamed) hunter).getTamed()
+                && ((MoCreatureNamed) target).getTamed();
+    }
 }

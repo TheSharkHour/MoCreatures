@@ -5,19 +5,19 @@ import net.kozibrodka.mocreatures.events.mod_mocreatures;
 import net.kozibrodka.mocreatures.mocreatures.MoCTools;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.server.entity.MobSpawnDataProvider;
 
-public class EntityPolarBear extends EntityBear implements MobSpawnDataProvider
-{
+/**
+ * Class for the Polar Bear entity.
+ * <p>Not sure why DrZhark didn't go with an enum, but too late!</p>
+ */
+public class EntityPolarBear extends EntityBear implements MobSpawnDataProvider {
 
-    public EntityPolarBear(World world)
-    {
+    public EntityPolarBear(World world) {
         super(world);
         texture = "/assets/mocreatures/stationapi/textures/mob/polarbear.png";
         attackRange = 5.0D;
@@ -25,86 +25,52 @@ public class EntityPolarBear extends EntityBear implements MobSpawnDataProvider
     }
 
     @Override
-    protected Entity getTargetInRange()
-    {
-        if(world.difficulty > 0)
-        {
-            if(world.difficulty > 1){
-                this.attackRange = 8.0D;
-            }else{
-                this.attackRange = 5.0D;
-            }
-            PlayerEntity entityplayer = world.getClosestPlayer(this, attackRange);
-            if(entityplayer != null)
-            {
-                return entityplayer;
-            }
-            if(random.nextInt(20) == 0)
-            {
-                LivingEntity entityliving = getClosestTarget(this, 8D);
-                return entityliving;
-            }
+    protected Entity getTargetInRange() {
+        if (world.difficulty > 0) {
+            attackRange = world.difficulty > 1 ? 8.0D : 5.0D;
+
+            PlayerEntity player = world.getClosestPlayer(this, attackRange);
+            if (player != null)
+                return player;
+
+            if (random.nextInt(20) == 0)
+                return getClosestTarget(this, 8D);
         }
+
         return null;
     }
 
     @Override
-    protected void attack(Entity entity, float f)
-    {
-        if((double)f < 2.5D && entity.boundingBox.maxY > boundingBox.minY && entity.boundingBox.minY < boundingBox.maxY)
-        {
-            attackCooldown = 20;
-            if(world.difficulty > 1){
-                this.force = 5;
-            }else{
-                this.force = 3;
-            }
-            entity.damage(this, force);
-            if(!(entity instanceof PlayerEntity))
-            {
-                MoCTools.destroyDrops(this, 3D);
-            }
-        }
+    protected void attack(Entity other, float distance) {
+        if ((double) distance >= 2.5D || other.boundingBox.maxY <= boundingBox.minY || other.boundingBox.minY >= boundingBox.maxY)
+            return;
+
+        attackCooldown = 20;
+        force = world.difficulty > 1 ? 5 : 3;
+
+        other.damage(this, force);
+        if (!(other instanceof PlayerEntity))
+            MoCTools.destroyDrops(this, 3D);
     }
 
     @Override
-    protected void dropItems()
-    {
-        int i = random.nextInt(3);
-        for(int j = 0; j < i; j++)
-        {
-            dropItem(new ItemStack(getDroppedItemId(), 1, 0), 0.0F);
-        }
-        int k = random.nextInt(2);
-        for (int j = 0; j < k; j++) {
-            if(world.difficulty > 0) {
+    protected void dropItems() {
+        super.dropItems();
+
+        // Seemingly unused item? But we'll keep this for now.
+        int leatherAmount = random.nextInt(2);
+        for (int i = 0; i < leatherAmount; i++) {
+            if (world.difficulty > 0)
                 dropItem(new ItemStack(mod_mocreatures.polarleather.id, 1, 0), 0.0F);
-            }
         }
     }
 
     @Override
-    public int getLimitPerChunk()
-    {
-        return 2;
-    }
-
-    @Override
-    public void writeNbt(NbtCompound nbttagcompound)
-    {
-        super.writeNbt(nbttagcompound);
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbttagcompound)
-    {
-        super.readNbt(nbttagcompound);
-    }
-
-    @Override
-    public boolean canSpawn()
-    {
-        return MoCTools.NearMaterialWithDistance(this, Double.valueOf(1.0D), Material.SNOW_LAYER) && mod_mocreatures.mocGlass.huntercreatures.pbearfreq > 0 && !MoCTools.isNearTorch(this) && super.cS2();
+    public boolean canSpawn() {
+        return MoCTools.NearMaterialWithDistance(this, 1.0D, Material.SNOW_LAYER)
+                && mod_mocreatures.mocGlass.huntercreatures.pbearfreq > 0
+                && !MoCTools.isNearTorch(this)
+                && super.animalCanSpawn();
     }
 
     @Override

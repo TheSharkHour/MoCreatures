@@ -20,17 +20,17 @@ public class MocreaturesEggItem extends TemplateItem {
     }
 
     @Override
-    public boolean useOnBlock(ItemStack arg, PlayerEntity arg2, World arg3, int i, int j, int k, int l) {
+    public boolean useOnBlock(ItemStack stack, PlayerEntity user, World world, int x, int y, int z, int side) {
 
-        if(arg3.isRemote){
+        if(world.isRemote){
             return true;
         }
 
         if(ide == 1){
-            huj = new EntityBear(arg3);
+            huj = new EntityBear(world);
         }
         if(ide == 2){
-            huj = new EntityBigCat(arg3);
+            huj = new EntityBigCat(world);
             /// anty agro spawn for testing
 //            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
 //            huj.setPosition(i + 12, j + 1, k);
@@ -40,104 +40,104 @@ public class MocreaturesEggItem extends TemplateItem {
 //            return false;
         }
         if(ide == 3){
-            huj = new EntityBird(arg3);
+            huj = new EntityBird(world);
         }
         if(ide == 4){
-            huj = new EntityBoar(arg3);
+            huj = new EntityBoar(world);
         }
         if(ide == 5){
-            huj = new EntityBunny(arg3);
+            huj = new EntityBunny(world);
         }
         if(ide == 6){
-            huj = new EntityCaveOgre(arg3);
+            huj = new EntityCaveOgre(world);
         }
         if(ide == 7){
-            huj = new EntityDeer(arg3);
+            huj = new EntityDeer(world);
         }
         if(ide == 8){
-            huj = new EntityDolphin(arg3);
+            huj = new EntityDolphin(world);
         }
         if(ide == 9){
-            huj = new EntityDuck(arg3);
+            huj = new EntityDuck(world);
         }
         if(ide == 10){
-            huj = new EntityFireOgre(arg3);
+            huj = new EntityFireOgre(world);
         }
         if(ide == 11){
-            huj = new EntityFishy(arg3);
+            huj = new EntityFishy(world);
         }
         if(ide == 12){
-            huj = new EntityFishyEgg(arg3);
+            huj = new EntityFishyEgg(world);
         }
         if(ide == 13){
-            huj = new EntityFlameWraith(arg3);
+            huj = new EntityFlameWraith(world);
         }
         if(ide == 14){
-            huj = new EntityFox(arg3);
+            huj = new EntityFox(world);
         }
         if(ide == 15){
-            huj = new EntityHellRat(arg3);
+            huj = new EntityHellRat(world);
         }
         if(ide == 16){
-            huj = new EntityHorse(arg3);
+            huj = new EntityHorse(world);
         }
         if(ide == 17){
-            huj = new EntityKitty(arg3);
+            huj = new EntityKitty(world);
         }
         if(ide == 18){
-            huj = new EntityKittyBed(arg3);
+            huj = new EntityKittyBed(world);
         }
         if(ide == 19){
-            huj = new EntityLitterBox(arg3);
+            huj = new EntityLitterBox(world);
         }
         if(ide == 20){
-            huj = new EntityMouse(arg3);
+            huj = new EntityMouse(world);
         }
         if(ide == 21){
-            huj = new EntityOgre(arg3);
+            huj = new EntityOgre(world);
         }
         if(ide == 22){
-            huj = new EntityPolarBear(arg3);
+            huj = new EntityPolarBear(world);
         }
         if(ide == 23){
-            huj = new EntityRat(arg3);
+            huj = new EntityRat(world);
         }
         if(ide == 24){
-            huj = new EntityShark(arg3);
-            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
-            huj.setPosition(i, j + 1, k);
-            arg3.spawnEntity(huj);
+            huj = new EntityShark(world);
+            huj.setPositionAndAnglesKeepPrevAngles(x, y, z, world.random.nextFloat() * 360F, 0.0F);
+            huj.setPosition(x, y + 1, z);
+            world.spawnEntity(huj);
             ((EntityShark)huj).setType(1);
             ((EntityShark)huj).setAge(1.0F + random.nextFloat());;
-            --arg.count;
+            --stack.count;
             return false; ///anty megalodon from spawn-egg
         }
         if(ide == 25){
-            huj = new EntitySharkEgg(arg3, "null");
+            huj = new EntitySharkEgg(world, "null");
         }
         if(ide == 26){
-            huj = new EntityWerewolf(arg3);
+            huj = new EntityWerewolf(world);
         }
         if(ide == 27){
-            huj = new EntityWraith(arg3);
+            huj = new EntityWraith(world);
         }
         if(ide == 28){
-            huj = new EntityWWolf(arg3);
+            huj = new EntityWWolf(world);
         }
         if(ide == 60){
-            huj = new EntityZebra(arg3);
+            huj = new EntityZebra(world);
         }
         if(ide == 61){
-            huj = new EntityElephant(arg3);
+            huj = new EntityElephant(world);
         }
         if(ide == 62){
-            huj = new EntityHippo(arg3);
+            huj = new EntityHippo(world);
         }
         if(ide == 63){
-            huj = new EntityGiraffe(arg3);
+            huj = new EntityGiraffe(world);
         }
         if(ide == 64){
-            huj = new EntityCrocodile(arg3);
+            huj = new EntityCrocodile(world);
             /// anty agro spawn for testing
 //            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
 //            huj.setPosition(i + 12, j + 1, k);
@@ -147,25 +147,25 @@ public class MocreaturesEggItem extends TemplateItem {
 //            return false;
         }
         if(ide == 65){
-            huj = new EntityCamel(arg3);
+            huj = new EntityCamel(world);
         }
         if(ide == 66){
-            huj = new EntityMummy(arg3);
+            huj = new EntityMummy(world);
         }
         if(ide == 67){
-            huj = new EntityScorpion(arg3);
+            huj = new EntityScorpion(world);
         }
         if(ide == 68){
-            huj = new EntityTurtle(arg3);
+            huj = new EntityTurtle(world);
         }
         if(ide == 69){
-            huj = new EntityRay(arg3);
+            huj = new EntityRay(world);
         }
         if(ide == 70){
-            huj = new EntityCollie(arg3);
+            huj = new EntityCollie(world);
         }
         if(ide == 71){
-            huj = new EntitySheep(arg3);
+            huj = new EntitySheep(world);
         }
         if(ide == 72){
 //            huj = new EntityAirShipHorse(arg3);
@@ -173,11 +173,11 @@ public class MocreaturesEggItem extends TemplateItem {
 
 
         if(ide >= 30 && ide < 40){
-            huj = new EntityHorse(arg3);
-            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
-            huj.setPosition(i, j + 1, k);
-            arg3.spawnEntity(huj);
-            --arg.count;
+            huj = new EntityHorse(world);
+            huj.setPositionAndAnglesKeepPrevAngles(x, y, z, world.random.nextFloat() * 360F, 0.0F);
+            huj.setPosition(x, y + 1, z);
+            world.spawnEntity(huj);
+            --stack.count;
             ((EntityHorse)huj).setType(ide - 30 + 1);
             ((EntityHorse)huj).setAdult(true);
             ((EntityHorse) huj).health = ((EntityHorse) huj).maxhealth;
@@ -185,11 +185,11 @@ public class MocreaturesEggItem extends TemplateItem {
         }
 
         if(ide >= 40 && ide < 50){
-            huj = new EntityBigCat(arg3);
-            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
-            huj.setPosition(i, j + 1, k);
-            arg3.spawnEntity(huj);
-            --arg.count;
+            huj = new EntityBigCat(world);
+            huj.setPositionAndAnglesKeepPrevAngles(x, y, z, world.random.nextFloat() * 360F, 0.0F);
+            huj.setPosition(x, y + 1, z);
+            world.spawnEntity(huj);
+            --stack.count;
             ((EntityBigCat)huj).setType(ide - 40 + 1);
             if (random.nextInt(4) == 0) {
                 ((EntityBigCat)huj).setAdult(false);
@@ -204,11 +204,11 @@ public class MocreaturesEggItem extends TemplateItem {
         }
 
         if(ide >= 50 && ide < 60){
-            huj = new EntityDolphin(arg3);
-            huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
-            huj.setPosition(i, j + 1, k);
-            arg3.spawnEntity(huj);
-            --arg.count;
+            huj = new EntityDolphin(world);
+            huj.setPositionAndAnglesKeepPrevAngles(x, y, z, world.random.nextFloat() * 360F, 0.0F);
+            huj.setPosition(x, y + 1, z);
+            world.spawnEntity(huj);
+            --stack.count;
             ((EntityDolphin)huj).setType(ide - 50 + 1);
             ((EntityDolphin) huj).setAge((0.8F + random.nextFloat()));
             if(((EntityDolphin) huj).getAge() < 1.5F){
@@ -224,10 +224,10 @@ public class MocreaturesEggItem extends TemplateItem {
             return false;
         }
 
-        huj.setPositionAndAnglesKeepPrevAngles(i, j, k, arg3.random.nextFloat() * 360F, 0.0F);
-        huj.setPosition(i, j + 1, k);
-        arg3.spawnEntity(huj);
-        --arg.count;
+        huj.setPositionAndAnglesKeepPrevAngles(x, y, z, world.random.nextFloat() * 360F, 0.0F);
+        huj.setPosition(x, y + 1, z);
+        world.spawnEntity(huj);
+        --stack.count;
         if(huj instanceof MoCreatureRacial){
             //LOADING PROPS by EGG-SPAWN
             ((MoCreatureRacial)huj).setTypeSpawn();
